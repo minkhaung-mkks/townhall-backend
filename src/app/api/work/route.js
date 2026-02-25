@@ -21,6 +21,8 @@ export async function GET(req) {
         const categoryId = searchParams.get('categoryId');
         const authorId = searchParams.get('authorId');
         const search = searchParams.get('search');
+        const tag = searchParams.get('tag');
+        const sortBy = searchParams.get('sortBy');
 
         const client = await getClientPromise();
         const db = client.db("wad-01");
@@ -58,17 +60,50 @@ export async function GET(req) {
             ];
         }
 
+        if (tag) {
+            query.tags = tag;
+        }
+
+        const sortOrder = sortBy === 'oldest' ? 1 : -1;
+
         const total = await db.collection("work").countDocuments(query);
         const result = await db.collection("work")
             .find(query)
-            .sort({ publishedAt: -1, createdAt: -1 })
+            .sort({ publishedAt: sortOrder, createdAt: sortOrder })
             .skip(skip)
             .limit(limit)
             .toArray();
 
-        console.log("==> result", result);
+        // Attach like counts to each work
+        const workIdsForLikes = result.map(w => w._id.toString());
+        const likeCounts = await db.collection("like").aggregate([
+            { $match: { workId: { $in: workIdsForLikes } } },
+            { $group: { _id: "$workId", likeCount: { $sum: 1 } } }
+        ]).toArray();
+        const likeCountMap = {};
+        likeCounts.forEach(l => { likeCountMap[l._id] = l.likeCount; });
+
+        // Populate author info
+        const authorIds = [...new Set(result.map(w => w.authorId).filter(Boolean))];
+        const authors = await db.collection("user").find({
+            _id: { $in: authorIds.map(id => { try { return new ObjectId(id); } catch { return null; } }).filter(Boolean) }
+        }).project({ firstname: 1, lastname: 1, username: 1 }).toArray();
+        const authorMap = {};
+        authors.forEach(a => { authorMap[a._id.toString()] = a; });
+
+        const worksWithLikes = result.map(w => ({
+            ...w,
+            likeCount: likeCountMap[w._id.toString()] || 0,
+            author: authorMap[w.authorId] ? {
+                firstname: authorMap[w.authorId].firstname,
+                lastname: authorMap[w.authorId].lastname,
+                username: authorMap[w.authorId].username
+            } : null
+        }));
+
+        console.log("==> result", worksWithLikes);
         return NextResponse.json({
-            works: result,
+            works: worksWithLikes,
             pagination: {
                 page,
                 limit,

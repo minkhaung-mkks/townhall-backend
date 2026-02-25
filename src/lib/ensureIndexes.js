@@ -32,4 +32,9 @@ export async function ensureIndexes() {
     // Category indexes
     const categoryCollection = db.collection("category");
     await categoryCollection.createIndex({ name: 1 }, { unique: true });
+
+    // Like indexes
+    const likeCollection = db.collection("like");
+    await likeCollection.createIndex({ userId: 1, workId: 1 }, { unique: true });
+    await likeCollection.createIndex({ workId: 1 });
 }

@@ -51,8 +51,23 @@ export async function GET(req, { params }) {
             }
         }
         
+        const likeCount = await db.collection("like").countDocuments({ workId: id });
+
+        let author = null;
+        if (work.authorId) {
+            try {
+                const authorDoc = await db.collection("user").findOne(
+                    { _id: new ObjectId(work.authorId) },
+                    { projection: { firstname: 1, lastname: 1, username: 1 } }
+                );
+                if (authorDoc) {
+                    author = { firstname: authorDoc.firstname, lastname: authorDoc.lastname, username: authorDoc.username };
+                }
+            } catch {}
+        }
+
         console.log("==> result", work);
-        return NextResponse.json(work, {
+        return NextResponse.json({ ...work, likeCount, author }, {
             headers: corsHeaders(req)
         });
     }
@@ -190,9 +205,10 @@ export async function DELETE(req, { params }) {
             _id: new ObjectId(id)
         });
         
-        // Also delete related drafts and comments
+        // Also delete related drafts, comments, and likes
         await db.collection("draft").deleteMany({ workId: id });
         await db.collection("comment").deleteMany({ workId: id });
+        await db.collection("like").deleteMany({ workId: id });
         
         return NextResponse.json({
             deletedCount: result.deletedCount

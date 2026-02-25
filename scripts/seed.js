@@ -388,7 +388,28 @@ async function seed() {
         
         await db.collection("review").insertMany(reviews);
         console.log(`Inserted ${reviews.length} reviews`);
-        
+
+        // Likes - spread across published works and users
+        const likes = [
+            // "The Journey Beyond" (publishedWork1, by creator1) — 4 likes
+            { _id: new ObjectId(), userId: creator2._id.toString(), workId: publishedWork1._id.toString(), createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000) },
+            { _id: new ObjectId(), userId: editorUser._id.toString(), workId: publishedWork1._id.toString(), createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) },
+            { _id: new ObjectId(), userId: adminUser._id.toString(), workId: publishedWork1._id.toString(), createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
+            { _id: new ObjectId(), userId: users[4]._id.toString(), workId: publishedWork1._id.toString(), createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) },
+
+            // "Understanding Modern Architecture" (publishedWork2, by creator2) — 2 likes
+            { _id: new ObjectId(), userId: creator1._id.toString(), workId: publishedWork2._id.toString(), createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000) },
+            { _id: new ObjectId(), userId: adminUser._id.toString(), workId: publishedWork2._id.toString(), createdAt: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000) },
+
+            // "Whispers of Dawn" (publishedWork3, by creator1) — 3 likes
+            { _id: new ObjectId(), userId: creator2._id.toString(), workId: publishedWork3._id.toString(), createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
+            { _id: new ObjectId(), userId: editorUser._id.toString(), workId: publishedWork3._id.toString(), createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) },
+            { _id: new ObjectId(), userId: adminUser._id.toString(), workId: publishedWork3._id.toString(), createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) },
+        ];
+
+        await db.collection("like").insertMany(likes);
+        console.log(`Inserted ${likes.length} likes`);
+
         await db.collection("user").createIndex({ email: 1 }, { unique: true });
         await db.collection("user").createIndex({ username: 1 }, { unique: true });
         await db.collection("category").createIndex({ name: 1 }, { unique: true });
@@ -397,6 +418,8 @@ async function seed() {
         await db.collection("comment").createIndex({ workId: 1 });
         await db.collection("draft").createIndex({ authorId: 1 });
         await db.collection("review").createIndex({ workId: 1 });
+        await db.collection("like").createIndex({ userId: 1, workId: 1 }, { unique: true });
+        await db.collection("like").createIndex({ workId: 1 });
         console.log("Created indexes");
         
         console.log("\n=== SEED COMPLETE ===");

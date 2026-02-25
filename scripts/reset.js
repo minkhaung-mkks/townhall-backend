@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 
 const MONGODB_URI = process.env.MONGODB_URI;
-const DB_NAME = "townhall";
+const DB_NAME = "wad-01";
 
 async function reset() {
     let client;
@@ -14,7 +14,7 @@ async function reset() {
         
         const db = client.db(DB_NAME);
         
-        const collections = ["user", "work", "category", "comment", "draft", "review"];
+        const collections = ["user", "work", "category", "comment", "draft", "review", "like"];
         
         for (const collectionName of collections) {
             try {
