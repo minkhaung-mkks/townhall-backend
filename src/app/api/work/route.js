@@ -30,9 +30,7 @@ export async function GET(req) {
         let query = {};
         
         if (user && (user.role === "editor" || user.role === "admin")) {
-            if (status) {
-                query.status = status;
-            }
+            query.status = status || "published";
         } else if (user && user.role === "creator") {
             if (authorId === user.id) {
                 if (status) {

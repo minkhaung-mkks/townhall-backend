@@ -45,9 +45,17 @@ export async function GET(req) {
             .limit(limit)
             .toArray();
 
-        console.log("==> result", result);
+        // Populate editor info
+        const editorIds = [...new Set(result.map(r => r.editorId))];
+        const editors = editorIds.length > 0
+            ? await db.collection("user").find({ _id: { $in: editorIds.map(id => new ObjectId(id)) } }).toArray()
+            : [];
+        const editorMap = {};
+        editors.forEach(e => { editorMap[e._id.toString()] = { username: e.username, firstname: e.firstname, lastname: e.lastname }; });
+        const reviewsWithEditor = result.map(r => ({ ...r, editor: editorMap[r.editorId] || null }));
+
         return NextResponse.json({
-            reviews: result,
+            reviews: reviewsWithEditor,
             pagination: {
                 page,
                 limit,
