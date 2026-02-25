@@ -71,3 +71,46 @@ export async function POST(req) {
         });
     }
 }
+
+export async function GET(req) {
+    try {
+        const { searchParams } = new URL(req.url);
+        const page = parseInt(searchParams.get('page')) || 1;
+        const limit = parseInt(searchParams.get('limit')) || 10;
+        const skip = (page - 1) * limit;
+
+        const client = await getClientPromise();
+        const db = client.db("wad-01");
+
+        const total = await db.collection("user").countDocuments({});
+        const result = await db.collection("user")
+            .find({})
+            .project({ password: 0 })
+            .skip(skip)
+            .limit(limit)
+            .toArray();
+
+        console.log("==> result", result);
+        return NextResponse.json({
+            users: result,
+            pagination: {
+                page,
+                limit,
+                total,
+                totalPages: Math.ceil(total / limit)
+            }
+        }, {
+            headers: corsHeaders(req)
+        });
+    }
+    catch (exception) {
+        console.log("exception", exception.toString());
+        const errorMsg = exception.toString();
+        return NextResponse.json({
+            message: errorMsg
+        }, {
+            status: 400,
+            headers: corsHeaders(req)
+        });
+    }
+}
