@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "node --env-file=.env.local scripts/seed.js",
+    "reset": "node --env-file=.env.local scripts/reset.js",
+    "reseed": "node --env-file=.env.local scripts/reseed.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -24,5 +27,6 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.4",
     "tailwindcss": "^4"
-  }
+  },
+  "type": "module"
 }

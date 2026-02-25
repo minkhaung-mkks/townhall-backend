@@ -25,15 +25,24 @@ export async function GET(req) {
         const client = await getClientPromise();
         const db = client.db("wad-01");
         
-        // Build query
+        const user = verifyJWT(req);
+        
         let query = {};
         
-        // Default: only show published works for public
-        const user = verifyJWT(req);
-        if (!user || user.role === "creator") {
+        if (user && (user.role === "editor" || user.role === "admin")) {
+            if (status) {
+                query.status = status;
+            }
+        } else if (user && user.role === "creator") {
+            if (authorId === user.id) {
+                if (status) {
+                    query.status = status;
+                }
+            } else {
+                query.status = "published";
+            }
+        } else {
             query.status = "published";
-        } else if (status) {
-            query.status = status;
         }
         
         if (categoryId) {

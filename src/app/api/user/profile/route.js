@@ -31,7 +31,10 @@ export async function GET(req) {
         // Don't return password
         const { password, ...profileWithoutPassword } = profile;
         
-        return NextResponse.json(profileWithoutPassword, {
+        return NextResponse.json({
+            ...profileWithoutPassword,
+            id: profile._id.toString()
+        }, {
             headers: corsHeaders(req)
         });
     }

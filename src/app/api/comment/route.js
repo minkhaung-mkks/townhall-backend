@@ -1,6 +1,6 @@
 import corsHeaders from "@/lib/cors";
 import { getClientPromise } from "@/lib/mongodb";
-import { verifyJWT } from "@/lib/auth";
+import { verifyJWT, verifyRole } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 
@@ -19,20 +19,29 @@ export async function GET(req) {
         const skip = (page - 1) * limit;
         const workId = searchParams.get('workId');
 
-        if (!workId) {
-            return NextResponse.json({
-                message: "Work ID is required"
-            }, {
-                status: 400,
-                headers: corsHeaders(req)
-            });
-        }
-
         const client = await getClientPromise();
         const db = client.db("wad-01");
 
-        // Only show visible comments (not hidden)
-        const query = { workId: workId, status: "visible" };
+        const user = verifyJWT(req);
+        const isAdmin = user && user.role === "admin";
+
+        let query = {};
+        
+        if (workId) {
+            query.workId = workId;
+            if (!isAdmin) {
+                query.status = "visible";
+            }
+        } else {
+            if (!isAdmin) {
+                return NextResponse.json({
+                    message: "Work ID is required"
+                }, {
+                    status: 400,
+                    headers: corsHeaders(req)
+                });
+            }
+        }
         
         const total = await db.collection("comment").countDocuments(query);
         const result = await db.collection("comment")
