@@ -36,28 +36,32 @@ Without approval and moderation, platforms can quickly fill with low-quality or 
 # 4. Data Models
 
 ## Entity 1: User
-Fields: name, email, passwordHash, role (creator/editor/admin), bio, status (active/suspended), createdAt  
+Fields: username, email, password, firstname, lastname, bio, role (creator/editor/admin), status (active/suspended/banned), createdAt
 Operations: Create, Read, Update, Delete
 
 ## Entity 2: Work (published article)
-Fields: title, content, authorId, tags, categoryId, status (draft/submitted/approved/rejected/published/hidden), submittedAt, approvedAt, publishedAt, createdAt, updatedAt  
+Fields: title, content, authorId, categoryId, tags, status (draft/submitted/approved/rejected/published/hidden), submittedAt, approvedAt, publishedAt, createdAt, updatedAt
 Operations: Create, Read, Update, Delete
 
-## Entity 3: Drafts (the 5 saved versions of an article)
-Fields: title, content, authorId, workId, pinned ( don’t delete ), createdAt  
+## Entity 3: Draft (the 5 saved versions of an article)
+Fields: title, content, authorId, workId, pinned, createdAt
 Operations: Create, Read, Update, Delete
 
 ## Entity 4: Comment
-Fields: workId, userId, body, status (visible/hidden), createdAt, updatedAt  
+Fields: workId, userId, username, body, status (visible/hidden), createdAt, updatedAt
 Operations: Create, Read, Update, Delete
 
 ## Entity 5: Review
-Fields: workId, editorId, decision (approved/rejected), feedback (optional), createdAt  
+Fields: workId, editorId, decision (approved/rejected), feedback, createdAt
 Operations: Create, Read, Update, Delete
 
 ## Entity 6: Category
-Fields: name, description  
+Fields: name, description, createdAt
 Operations: Create, Read, Update, Delete
+
+## Entity 7: Like
+Fields: userId, workId, createdAt
+Operations: Create, Read, Delete
 
 ---
 
