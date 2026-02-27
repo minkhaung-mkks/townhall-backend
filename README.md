@@ -68,8 +68,6 @@ Operations: Create, Read, Update, Delete
 
 ---
 
-
-
 # Features
 
 ## Home page ( not logged in )
