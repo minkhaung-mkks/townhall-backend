@@ -1,4 +1,4 @@
-# Town Hall Board
+# 1. Town Hall Board
 
 Town hall board - A place for users to write and post articles to and read the published articles, with content moderation by editors and admins.
 
@@ -6,25 +6,16 @@ Town hall board - A place for users to write and post articles to and read the p
 
 # 2. Team Members
 
-- Member 1: Min Khaung Kyaw Swar
-- Member 2: Kyaw Zeyar Hein
+- Member 1: [Min Khaung Kyaw Swar ( 6712164 )](https://github.com/minkhaung-mkks) 
+- Member 2: [Kyaw Zeyar Hein ( 6632106 )](https://github.com/KyawZeyarHein)
 
 ---
-
-# 6. Technology Stack
-
-Frontend: React  
-Backend: Next.js  
-Database: MongoDB  
-Deployment: Azure Virtual Machine
-
---
 
 # 3. Problem Statement & Motivation
 
 ## What problem does this system solve?
 
-User that want user-written articles often rely on social media or forums, which lack structured publishing, version control, and approval before content goes public. This system would let users publish written works while ensuring quality and safety through editor approval and site moderation.
+Users that want user-written articles often rely on social media or forums, which lack structured publishing, version control, and approval before content goes public. This system would let users publish written works while ensuring quality and safety through editor approval and site moderation.
 
 The site could even serve as an online novel site for aspiring writers.
 
@@ -40,17 +31,17 @@ Without approval and moderation, platforms can quickly fill with low-quality or 
 
 ---
 
-# 5. Data Models
+# 4. Data Models
 
 ## Entity 1: User
 Fields: name, email, passwordHash, role (creator/editor/admin), bio, status (active/suspended), createdAt  
 Operations: Create, Read, Update, Delete
 
 ## Entity 2: Work (published article)
-Fields: title, content, authorId, tags, categoryId, status (draft/submitted/approved/rejected/published/hidden), submittedAt, approvedAt, publishedAt, createAt, updatedAt  
+Fields: title, content, authorId, tags, categoryId, status (draft/submitted/approved/rejected/published/hidden), submittedAt, approvedAt, publishedAt, createdAt, updatedAt  
 Operations: Create, Read, Update, Delete
 
-## Entity 3: Drafts (the 5 saved versions of an article )
+## Entity 3: Drafts (the 5 saved versions of an article)
 Fields: title, content, authorId, workId, pinned ( don’t delete ), createdAt  
 Operations: Create, Read, Update, Delete
 
@@ -68,13 +59,22 @@ Operations: Create, Read, Update, Delete
 
 ---
 
-# Features
+# 5. Technology Stack
+
+Frontend: React
+Backend: Next.js
+Database: MongoDB
+Deployment: Azure Virtual Machine
+
+---
+
+# 6. Features
 
 ## Home page ( not logged in )
 
 ![Home page unlogged](imgs/home_unlogged.png)
 
-Show the a stats dashboard regarding the most popular author and works along with distribution of work across genres.
+Show a stats dashboard regarding the most popular author and works along with distribution of work across genres.
 
 ![Home page unlogged 2](imgs/home_2_unlogged.png)
 
@@ -102,7 +102,7 @@ Logged in users are able to create works, comment and like published articles.
 
 ![Logged article](imgs/logged_article.png)
 
-- Read beautiful rendered works.
+- Read beautifully rendered works.
 
 ![Work comments](imgs/logged_work_comments.png)
 
@@ -155,5 +155,3 @@ Logged in users are able to create works, comment and like published articles.
 ![Admin manage categories](imgs/admin_manage_categories.png)
 
 - Admin can manage categories
-
-- Comment system on published works (create/edit/delete own comments)
