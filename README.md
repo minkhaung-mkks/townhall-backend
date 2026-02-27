@@ -155,3 +155,18 @@ Logged in users are able to create works, comment and like published articles.
 ![Admin manage categories](imgs/admin_manage_categories.png)
 
 - Admin can manage categories
+
+---
+
+# Test Accounts
+
+All accounts use the password: `password123`
+
+| Role | Username | Email | Name | Status |
+|------|----------|-------|------|--------|
+| Admin | `admin` | admin@test.com | Admin User | active |
+| Editor | `editor1` | editor@test.com | John Editor | active |
+| Creator | `creator1` | creator1@test.com | Jane Writer | active |
+| Creator | `creator2` | creator2@test.com | Bob Author | active |
+| Creator | `banned_user` | banned@test.com | Banned User | banned |
+| Creator | `suspended_user` | suspended@test.com | Suspended User | suspended |
