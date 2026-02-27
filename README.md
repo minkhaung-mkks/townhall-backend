@@ -2,7 +2,7 @@
 
 Town hall board - A place for users to write and post articles to and read the published articles, with content moderation by editors and admins.
 
-Deployment URL : [https://townhall.eastus2.cloudapp.azure.com](https://townhall.eastus2.cloudapp.azure.com)
+Deployment URL : [https://townhall-board.eastus2.cloudapp.azure.com](https://townhall-board.eastus2.cloudapp.azure.com)
 
 ---
 
